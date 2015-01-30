@@ -88,6 +88,30 @@ dockerhub-login:
     - require:
       - user: zenoss_user
 
+zenoss_private_key:
+  file.managed:
+     - name: /home/zenoss/.ssh/id_dsa
+     - user: zenoss
+     - group: zenoss
+     - mode: 600
+     - show_diff: False
+     - contents_pillar: europa:ssh_keys:privkey
+     - require:
+       - user: zenoss_user
+       - group: zenoss_group
+
+zenoss_public_key:
+  file.managed:
+     - name: /home/zenoss/.ssh/id_dsa.pub
+     - user: zenoss
+     - group: zenoss
+     - mode: 644
+     - show_diff: False
+     - contents_pillar: europa:ssh_keys:pubkey
+     - require:
+       - user: zenoss_user
+       - group: zenoss_group
+
 serviced_deb:
    cmd.run:
        - name: curl {{ pillar['europa']['cc_url'] }} -o /tmp/serviced.deb
@@ -167,3 +191,28 @@ serviced-service:
 #    - unless: while [ $(serviced host list | awk '{if (NR == 1) print $1}') != "ID" ]; do sleep 1; done
 #    - require:
 #        - service: serviced-service
+
+git-config:
+  file.managed:
+    - name: /home/zenoss/.gitconfig
+    - user: zenoss
+    - group: zenoss
+    - mode: 644
+    - contents_pillar: europa:gitconfig
+
+github-known_hosts:
+  ssh_known_hosts.present:
+    - name: github.com
+    - user: zenoss
+    - fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
+    - require:
+      - file: git-config
+
+git@github.com:zenoss/zenoss-service.git:
+  git.latest:
+    - target: /home/zenoss/zenoss-service
+    - unless: test -d /home/zenoss/zenoss-service
+    - user: zenoss
+    - require:
+      - file: git-config
+

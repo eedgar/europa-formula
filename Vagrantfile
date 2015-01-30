@@ -14,6 +14,7 @@ Vagrant.configure(2) do |config|
 
   ## For masterless, mount your salt file root
   config.vm.synced_folder "salt/roots/", "/srv/salt/"
+  config.vm.synced_folder "salt/pillar/", "/srv/salt/pillar"
   config.vm.synced_folder ".", "/srv/formulas/europa-formula/"
 
 #  config.trigger.after :destroy do
@@ -52,13 +53,6 @@ Vagrant.configure(2) do |config|
   config.vm.provision :salt do |salt|
     salt.minion_config = "salt/minion"
     salt.run_highstate = true
-    salt.pillar({ "europa" => { "dockerhub" => { "username" => "rocket",
-                                                 "email" => "rocketman110@gmail.com",
-                                                 "password" => "sample"
-                                               }
-                              }
-                })
-    salt.pillar({ "europa" => { "cc_url" => "http://artifacts.zenoss.loc/europa/releases/CR3/serviced_1.0.0~trusty-0.1.CR3_amd64.deb" }})
   end
 
   config.vm.define :master do |master|
