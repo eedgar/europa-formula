@@ -1,0 +1,13 @@
+## serviced aliases
+## managed by salt do not edit by hand
+alias s='serviced'
+alias ss='serviced service'
+alias ssa='serviced service attach'
+alias ssaz='serviced service attach zope'
+alias ssl='serviced service list'
+alias ssr='serviced service run'
+alias ssrz='serviced service run zope'
+alias sss='serviced service status'
+alias st='serviced template'
+alias stl='serviced template list'
+alias std='serviced template deploy'
