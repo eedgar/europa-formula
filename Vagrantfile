@@ -16,6 +16,10 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "salt/roots/", "/srv/salt/"
   config.vm.synced_folder "salt/pillar/", "/srv/salt/pillar"
   config.vm.synced_folder ".", "/srv/formulas/europa-formula/"
+  config.vm.provider :vmware_fusion do |vm|
+    vm.vmx["numvcpus"] = "4"
+    vm.vmx["memsize"] = "4096"
+  end
 
 #  config.trigger.after :destroy do
 #    run "rm -rf #{dir}"

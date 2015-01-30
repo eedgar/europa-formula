@@ -1,0 +1,7 @@
+{% set ip = salt['grains.get']('ip_interfaces:eth0')[0] %}
+until serviced host list 2>&1 | egrep "no hosts|ID"
+do
+    sleep 30
+done
+
+serviced host add {{ip}}:4979 default

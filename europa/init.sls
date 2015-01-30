@@ -1,5 +1,5 @@
 {% set host = salt['grains.get']('host') %}
-{% set ip = salt['grains.get']('ip_interfaces:eth0') %}
+{% set ip = salt['grains.get']('ip_interfaces:eth0')[0] %}
 {% set sourcedir = '/home/zenoss/src' %}
 {% set docker_image = 'zenoss/serviced-isvcs\:v26' %}
 
@@ -7,7 +7,6 @@
   host.present:
     - ip: {{ ip }}
     - names:
-        - {{ host }}
         - zenoss5.{{ host }}
         - opentsdb.{{ host }}
         - hbase.{{ host }}
@@ -174,11 +173,6 @@ bashrc_serviced:
         SERVICED_LOG_LEVEL=2
         SERVICED_OPTS="-mount *,{{ sourcedir }},{{ sourcedir }}"
 
-#serviced_internal_service_pull:
-#   cmd.wait:
-#    - name: "docker pull $(serviced version | grep '^IsvcsImage: ' | awk '{print $2}')"
-#    - unless: docker images|grep serviced-isvcs
-
 serviced-service:
     service.running:
     - name: serviced
@@ -186,12 +180,13 @@ serviced-service:
     - require:
       - file: /etc/default/serviced
 
-#serviced-host:
-#  cmd.run:
-#    - name: 'sleep 20 && serviced host add {{ ip[0] }}:4979 default'
-#    - unless: while [ $(serviced host list | awk '{if (NR == 1) print $1}') != "ID" ]; do sleep 1; done
-#    - require:
-#        - service: serviced-service
+add_host:
+  cmd.script:
+    - source: salt://europa/add_host
+    - template: jinja
+    - unless: serviced host list|grep {{ip}}
+    - require:
+      - service: serviced-service
 
 git-config:
   file.managed:
