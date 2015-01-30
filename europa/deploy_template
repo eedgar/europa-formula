@@ -1,0 +1,2 @@
+TEMPLATE_ID=$(serviced template list|grep Zenoss.develop|awk '{print $1}')
+serviced template deploy ${TEMPLATE_ID} default develop

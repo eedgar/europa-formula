@@ -224,6 +224,15 @@ add_template:
       - git: git-zenoss-service
       - cmd: add_host
 
+deploy_template:
+  cmd.script:
+    - source: salt://europa/deploy_template
+    - user: zenoss
+    - template: jinja
+    - unless: serviced service list|grep Zenoss.develop
+    - require:
+      - cmd: add_template
+
 {% for repo in salt['pillar.get']('europa:gitrepos') %}
 {{repo.repo}}:
   git.latest:
