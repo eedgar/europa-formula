@@ -7,6 +7,7 @@
   host.present:
     - ip: {{ ip }}
     - names:
+        - {{ host }}
         - zenoss5.{{ host }}
         - opentsdb.{{ host }}
         - hbase.{{ host }}
