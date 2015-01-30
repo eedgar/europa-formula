@@ -216,3 +216,12 @@ git@github.com:zenoss/zenoss-service.git:
     - require:
       - file: git-config
 
+{% for repo in salt['pillar.get']('europa:gitrepos') %}
+{{repo.repo}}:
+  git.latest:
+    - target: /home/zenoss/src/{{repo.path}}
+    - unless: test -d /home/zenoss/src/{{repo.path}}
+    - user: zenoss
+    - require:
+      - file: git-config
+{% endfor %}
