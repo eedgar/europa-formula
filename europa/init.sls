@@ -183,6 +183,7 @@ serviced-service:
 add_host:
   cmd.script:
     - source: salt://europa/add_host
+    - user: zenoss
     - template: jinja
     - unless: serviced host list|grep {{ip}}
     - require:
@@ -216,6 +217,7 @@ git@github.com:zenoss/zenoss-service.git:
 add_template:
   cmd.script:
     - source: salt://europa/add_template
+    - user: zenoss
     - template: jinja
     - unless: serviced template list|grep Zenoss.develop
     - require:
