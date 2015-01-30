@@ -1,0 +1,13 @@
+if [ ! -d Zenoss.develop ];
+then
+    rm -Rf Zenoss.develop
+fi
+
+cp -R zenoss-service/services/Zenoss.core Zenoss.develop
+sed -i 's/"Description": "Zenoss Core"/"Description": "Zenoss Develop"/' Zenoss.develop/service.json
+sed -i 's/"Launch": "auto"/"Launch": "manual"/' Zenoss.develop/localhost/localhost/zen{command,jmx,modeler,perfsnmp,ping,process,python,status,syslog,trap}/service.json
+serviced template compile \
+    -map zenoss/hbase:xx,zenoss/hbase:v5 \
+    -map zenoss/opentsdb:xx,zenoss/opentsdb:v12 \
+    -map zenoss/zenoss5x,zenoss/core_5.0:5.0.0_CR3 \
+    Zenoss.develop | serviced template add

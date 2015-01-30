@@ -206,11 +206,21 @@ github-known_hosts:
 
 git@github.com:zenoss/zenoss-service.git:
   git.latest:
+    - name: git-zenoss-service
     - target: /home/zenoss/zenoss-service
     - unless: test -d /home/zenoss/zenoss-service
     - user: zenoss
     - require:
       - file: git-config
+
+add_template:
+  cmd.script:
+    - source: salt://europa/add_template
+    - template: jinja
+    - unless: serviced template list|grep Zenoss.develop
+    - require:
+      - git: git-zenoss-service
+      - cmd: add_host
 
 {% for repo in salt['pillar.get']('europa:gitrepos') %}
 {{repo.repo}}:
