@@ -11,3 +11,5 @@ serviced template compile \
     -map zenoss/opentsdb:xx,zenoss/opentsdb:v12 \
     -map zenoss/zenoss5x,zenoss/core_5.0:5.0.0_CR3 \
     Zenoss.develop | serviced template add
+
+rm -Rf Zenoss.develop

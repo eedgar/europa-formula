@@ -222,12 +222,12 @@ github-known_hosts:
 
 git@github.com:zenoss/zenoss-service.git:
   git.latest:
-    - name: git-zenoss-service
     - target: /home/zenoss/zenoss-service
     - unless: test -d /home/zenoss/zenoss-service
     - user: zenoss
     - require:
       - file: git-config
+      - ssh_known_hosts: github-known_hosts
 
 add_template:
   cmd.script:
@@ -236,7 +236,7 @@ add_template:
     - template: jinja
     - unless: serviced template list|grep Zenoss.develop
     - require:
-      - git: git-zenoss-service
+      - git: git@github.com:zenoss/zenoss-service.git
       - cmd: add_host
 
 deploy_template:
