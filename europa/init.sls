@@ -51,6 +51,7 @@ docker-repo-key:
 
 lxc-docker-1.3.3:
   pkg.installed:
+    - refresh: True   # pick up the new info from setting the repo
     - require:
         - cmd: docker-repo-key
 
@@ -88,6 +89,18 @@ dockerhub-login:
     - require:
       - user: zenoss_user
 
+
+ssh_keydir:
+    file.directory:
+      - name: /home/zenoss/.ssh/
+      - user: zenoss
+      - group: zenoss
+      - makedirs: True
+      - mode: 700
+      - require:
+        - user: zenoss_user
+        - group: zenoss_group
+
 zenoss_private_key:
   file.managed:
      - name: /home/zenoss/.ssh/id_dsa
@@ -97,6 +110,7 @@ zenoss_private_key:
      - show_diff: False
      - contents_pillar: europa:ssh_keys:privkey
      - require:
+       - file: ssh_keydir
        - user: zenoss_user
        - group: zenoss_group
 
@@ -109,6 +123,7 @@ zenoss_public_key:
      - show_diff: False
      - contents_pillar: europa:ssh_keys:pubkey
      - require:
+       - file: ssh_keydir
        - user: zenoss_user
        - group: zenoss_group
 
