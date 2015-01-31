@@ -31,6 +31,7 @@ user-dependencies:
    pkg.installed:
      - names:
        - git
+       - git-flow
        - tmux
        - screen
        - vim
