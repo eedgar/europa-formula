@@ -236,6 +236,7 @@ git-config:
   file.managed:
     - source: salt://europa/gitconfig
     - name: /home/zenoss/.gitconfig
+    - unless: test -f /home/zenoss/.gitconfig
     - template: jinja
     - user: zenoss
     - group: zenoss
@@ -246,6 +247,7 @@ git-config-extended:
   file.managed:
     - source: salt://europa/gitconfig_extended
     - name: /home/zenoss/.gitconfig_extended
+    - unless: test -f /home/zenoss/.gitconfig_extended
     - template: jinja
     - user: zenoss
     - group: zenoss
