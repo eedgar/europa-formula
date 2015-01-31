@@ -36,6 +36,19 @@ user-dependencies:
        - screen
        - vim
        - mosh
+       - vcsh
+       - vim-syntax-docker
+       - vim-python-jedi
+       - vim-gocomplete
+       - vim-scripts
+       - python-flake8
+       - python-autopep8
+       - virtualenv
+       - virtualenvwrapper
+       - fabric
+       - python-pexpect
+       - python-setuptools
+       - subversion
 
 docker-repo:
     pkgrepo.managed:
