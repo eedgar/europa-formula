@@ -27,10 +27,12 @@ docker-dependencies:
       - net-tools
       - apt-transport-https
 
+## Helpful user utilities
 user-dependencies:
    pkg.installed:
      - names:
        - git
+       - ruby
        - git-flow
        - tmux
        - screen
@@ -51,6 +53,16 @@ user-dependencies:
        - python-pexpect
        - python-setuptools
        - subversion
+
+tmuxinator:
+  cmd.run:
+    - name: "gem install tmuxinator"
+    - unless: "test -x /usr/local/bin/tmuxinator"
+    - require:
+        - pkg: user-dependencies
+
+## End Helpful user utilities
+
 
 docker-repo:
     pkgrepo.managed:
