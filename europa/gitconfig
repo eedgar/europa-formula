@@ -1,0 +1,5 @@
+{%- set gitconfig = salt['pillar.get']('europa:gitconfig') -%}
+[include]
+    path = ~/.gitconfig_extended
+
+{{gitconfig}}

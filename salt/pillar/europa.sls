@@ -6,11 +6,13 @@ europa:
      - repo: git@github.com:zenoss/ZenPacks.zenoss.RUM.git
        path: ZenPacks.zenoss.RUM
 
+   extended_gitconfig: True
    # User info
    gitconfig: |
      [user]
        name = Eric Edgar
        email = eedgar@zenoss.com
+
    dockerhub:
       username: rocket
       email: rocketman110@gmail.com

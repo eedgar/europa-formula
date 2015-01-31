@@ -1,0 +1,153 @@
+[alias]
+    # Add unmerged files to the index
+    add-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
+    b = branch
+    ba = branch -a
+    # Clone a repository including all submodules
+    c = clone --recursive
+    # Commit all changes
+    ca = !git add -A && git commit -av
+    ci = commit -a
+    co = checkout
+    # Credit an author on the latest commit
+    credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
+
+    # Show the diff between the latest commit and the current state
+    d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat -R"
+
+    dev = checkout develop
+    # `git di $number` shows the diff between the state `$number` revisions ago and the current state
+    di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
+    df = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
+    dfR = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat -R"
+    # Remove branches that have already been merged with master
+    dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+    # upstream merge remove (Not done, and add prompt)"
+    #dmu = "!git branch -r --merged | grep -v '\\*'|xargs -n 1 echo git push origin :foo"
+
+    # Open unmerged files in vim
+    edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
+
+    # flow
+    fl = flow
+    ff = flow feature
+
+    # Find branches containing commit
+    fb = "!f() { git branch -a --contains $1; }; f"
+    # Find commits by source code
+    fc = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
+    # Find commits by commit message
+    fm = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+    # Find tags containing commit
+    ft = "!f() { git describe --always --contains $1; }; f"
+
+    # Switch to a branch, creating it if necessary
+    go = checkout -B
+
+    # View abbreviated SHA, description, and history graph of the latest 20 commits
+    l = log --pretty=oneline -n 20 --graph --abbrev-commit
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+
+    mg = merge --squash --no-commit
+
+    # Pull in remote changes for the current repository and all its submodules
+    p = !"git pull; git submodule foreach git pull origin master"
+
+    # Interactive rebase with the given number of latest commits
+    reb = "!r() { git rebase -i HEAD~$1; }; r"
+
+    remotes = remote -v
+    rmpyc = !sh -c 'find $(git rev-parse --show-cdup) -name "*.pyc" -delete'
+
+    # View the current working tree status using the short format
+    s = status -s
+    sandbox = !sh -c 'git svn branch "$0" && git co sandbox/"$0" -b "$0" >/dev/null 2>&1'
+
+    # Show verbose output about tags, branches or remotes
+    tags = tag -l
+
+    undo = reset --hard HEAD
+    up = svn rebase
+    update = svn rebase
+
+    vmod = "!vim `git ls-files -m`"
+
+[core]
+    # Use custom `.gitignore` and `.gitattributes`
+    excludesfile = ~/.gitignore
+    attributesfile = ~/.gitattributes
+    # Treat spaces before tabs, lines that are indented with 8 or more spaces, and
+    # all kinds of trailing whitespace as an error.
+    # [default] trailing-space: looks for spaces at the end of a line
+    # [default] space-before-tab: looks for spaces before tabs at the beginning of
+    # a line
+    whitespace = space-before-tab,indent-with-non-tab,trailing-space
+    # Make `git rebase` safer on OS X
+    # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
+    trustctime = false
+
+
+[color]
+    # Use colors in Git commands that are capable of colored output when
+    # outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
+    ui = auto
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+
+# Use `origin` as the default remote on the `master` branch in all cases
+[branch "master"]
+    remote = origin
+    merge = refs/heads/master
+
+# URL shorthands
+[url "git@github.com:"]
+    insteadOf = "gh:"
+    pushInsteadOf = "github:"
+    pushInsteadOf = "git://github.com/"
+[url "git://github.com/"]
+    insteadOf = "github:"
+[url "https://github.com/zenoss/"]
+    insteadOf = "ghsz:"
+[url "git@gist.github.com:"]
+    insteadOf = "gst:"
+    pushInsteadOf = "gist:"
+    pushInsteadOf = "git://gist.github.com/"
+[url "git://gist.github.com/"]
+    insteadOf = "gist:"
+
+#[diff]
+#    external = git_diff_wrapper
+
+[push]
+    default = matching
+
+#[init]
+    #http://www.philforhumanity.com/Global_Git_Hooks.html
+    #templatedir = .git_templates
+
+[branch]
+    autosetupmerge = true
+
+[credential]
+	helper = cache --timeout=900
+
+[include]
+    path = ~/.gitprivate
+
+[filter "media"]
+	clean = git media clean %f
+	smudge = git media smudge %f
+	required = true

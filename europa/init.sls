@@ -206,11 +206,23 @@ add_host:
 
 git-config:
   file.managed:
+    - source: salt://europa/gitconfig
     - name: /home/zenoss/.gitconfig
+    - template: jinja
     - user: zenoss
     - group: zenoss
     - mode: 644
-    - contents_pillar: europa:gitconfig
+
+{% if salt['pillar.get']('europa:extended_gitconfig', False) %}
+git-config-extended:
+  file.managed:
+    - source: salt://europa/gitconfig_extended
+    - name: /home/zenoss/.gitconfig_extended
+    - template: jinja
+    - user: zenoss
+    - group: zenoss
+    - mode: 644
+{% endif %}
 
 github-known_hosts:
   ssh_known_hosts.present:
