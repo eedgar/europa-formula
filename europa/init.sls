@@ -43,7 +43,9 @@ user-dependencies:
        - vim-scripts
        - python-flake8
        - python-autopep8
-       - virtualenv
+       - python-virtualenv
+       - python-pip
+       - python-tox
        - virtualenvwrapper
        - fabric
        - python-pexpect
