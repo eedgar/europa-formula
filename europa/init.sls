@@ -39,6 +39,7 @@ user-dependencies:
        - vim
        - mosh
        - vcsh
+       - mr
        - vim-syntax-docker
        - vim-python-jedi
        - vim-gocomplete
