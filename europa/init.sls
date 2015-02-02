@@ -171,7 +171,7 @@ serviced-repo:
 serviced-repo-key:
   cmd.run:
     - name: "apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys AA5A1AD7"
-    - unless: 'apt-key list | grep A88D21E9'
+    - unless: 'apt-key list | grep AA5A1AD7'
     - require:
         - pkgrepo: serviced-repo
 
