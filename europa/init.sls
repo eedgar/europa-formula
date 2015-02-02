@@ -106,6 +106,7 @@ zenoss_user:
         - password: $6$SvUPvd3Q$YQSi9Xh253iSIkRueSAvqEZmZDqMG8XjCzsYX.DrXR3UFdwGx8MQK358I4JNqnm6ttxiq6610fYVVrpnzqOmz0
         - uid: 1337
         - gid: 1206
+        - shell: /bin/bash
         - groups:
             - sudo
             - docker
