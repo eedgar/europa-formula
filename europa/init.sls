@@ -2,6 +2,7 @@
 {% set ip = salt['grains.get']('ip_interfaces:eth0')[0] %}
 {% set sourcedir = '/home/zenoss/src' %}
 {% set docker_image = 'zenoss/serviced-isvcs\:v26' %}
+{% set europa = salt['pillar.get']('europa', {}) %}
 
 {{ host }}:
   host.present:
