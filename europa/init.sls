@@ -131,6 +131,7 @@ ssh_keydir:
         - user: z_zenoss_user
         - group: z_zenoss_group
 
+{% if 'ssh_keys:privkey' in europa %}
 zenoss_private_key:
   file.managed:
      - name: /home/zenoss/.ssh/id_dsa
@@ -143,7 +144,9 @@ zenoss_private_key:
        - file: ssh_keydir
        - user: z_zenoss_user
        - group: z_zenoss_group
+{% endif %}
 
+{% if 'ssh_keys:pubkey' in europa %}
 zenoss_public_key:
   file.managed:
      - name: /home/zenoss/.ssh/id_dsa.pub
@@ -156,6 +159,7 @@ zenoss_public_key:
        - file: ssh_keydir
        - user: z_zenoss_user
        - group: z_zenoss_group
+{% endif %}
 
 serviced_deb:
    cmd.run:
