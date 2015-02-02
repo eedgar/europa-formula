@@ -55,6 +55,8 @@ user-dependencies:
        - python-pexpect
        - python-setuptools
        - subversion
+       - emacs
+
 
 tmuxinator:
   cmd.run:
