@@ -16,7 +16,7 @@
 ufw_disable:
   cmd.run:
     - name: "ufw disable"
-    - unless: "ufw status| grep Status: inactive"
+    - unless: "ufw status| grep 'Status: inactive'"
 
 # docker #######################################################################
 docker-dependencies:
