@@ -8,8 +8,8 @@ sed -i 's/"Description": "Zenoss Core"/"Description": "Zenoss Develop"/' Zenoss.
 sed -i 's/"Launch": "auto"/"Launch": "manual"/' Zenoss.develop/localhost/localhost/zen{command,jmx,modeler,perfsnmp,ping,process,python,status,syslog,trap}/service.json
 
 # found the versions in the makefile of the zenoss-service repo.
-hbase_VERSION = $(cat zenoss-service/makefile |egrep 'hbase_VERSION\s+='|awk '{print $3}')
-opentsdb_VERSION = $(cat zenoss-service/makefile |egrep 'opentsdb_VERSION\s+='|awk '{print $3}')
+hbase_VERSION=$(cat zenoss-service/makefile |egrep 'hbase_VERSION\s+='|awk '{print $3}')
+opentsdb_VERSION=$(cat zenoss-service/makefile |egrep 'opentsdb_VERSION\s+='|awk '{print $3}')
 serviced template compile \
     -map zenoss/hbase:xx,zenoss/hbase:${hbase_VERSION} \
     -map zenoss/opentsdb:xx,zenoss/opentsdb:${opentsdb_VERSION} \
