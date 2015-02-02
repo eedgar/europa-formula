@@ -175,25 +175,11 @@ serviced-repo-key:
     - require:
         - pkgrepo: serviced-repo
 
-#serviced_deb:
-#   cmd.run:
-#       - name: curl {{ pillar['europa']['cc_url'] }} -o /tmp/serviced.deb
-#       - unless:
-#           - test -x /usr/bin/serviced
-#
-#serviced_install:
-#  cmd.run:
-#    - name: "dpkg -i /tmp/serviced.deb"
-#    - unless:
-#        - test -x /usr/bin/serviced
-#    - require:
-#      - cmd: serviced_deb
-#
-#serviced_download_rm:
-#  cmd.run:
-#       - name: rm /tmp/serviced.deb
-#       - onlyif:
-#          - test -f /tmp/serviced.deb
+serviced:
+  pkg.installed:
+    - refresh: True   # pick up the new info from setting the repo
+    - require:
+        - cmd: serviced-repo-key
 
 srcdir-create:
    file.directory:
