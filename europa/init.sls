@@ -92,13 +92,13 @@ docker_aufs:
       - pkg: lxc-docker-1.3.3
 
 # zenoss user/group
-zenoss_group:
+z_zenoss_group:
     group:
         - name: zenoss
         - present
         - gid: 1206
 
-zenoss_user:
+z_zenoss_user:
     user:
         - name: zenoss
         - present
@@ -117,7 +117,7 @@ dockerhub-login:
     - user: zenoss
     - unless: test -f ~/.dockercfg
     - require:
-      - user: zenoss_user
+      - user: z_zenoss_user
 
 
 ssh_keydir:
@@ -128,8 +128,8 @@ ssh_keydir:
       - makedirs: True
       - mode: 700
       - require:
-        - user: zenoss_user
-        - group: zenoss_group
+        - user: z_zenoss_user
+        - group: z_zenoss_group
 
 zenoss_private_key:
   file.managed:
@@ -141,8 +141,8 @@ zenoss_private_key:
      - contents_pillar: europa:ssh_keys:privkey
      - require:
        - file: ssh_keydir
-       - user: zenoss_user
-       - group: zenoss_group
+       - user: z_zenoss_user
+       - group: z_zenoss_group
 
 zenoss_public_key:
   file.managed:
@@ -154,8 +154,8 @@ zenoss_public_key:
      - contents_pillar: europa:ssh_keys:pubkey
      - require:
        - file: ssh_keydir
-       - user: zenoss_user
-       - group: zenoss_group
+       - user: z_zenoss_user
+       - group: z_zenoss_group
 
 serviced_deb:
    cmd.run:
@@ -183,7 +183,7 @@ srcdir-create:
      - user: zenoss
      - group: zenoss
      - require:
-         - user: zenoss_user
+         - user: z_zenoss_user
 
 bashrc_edits:
   file.blockreplace:
