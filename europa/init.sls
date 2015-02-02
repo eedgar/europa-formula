@@ -262,6 +262,18 @@ git-config-extended:
     - mode: 644
 {% endif %}
 
+{% if salt['pillar.get']('europa:tmux_config', False) %}
+tmux-config:
+  file.managed:
+    - source: salt://europa/tmux_config
+    - name: /home/zenoss/.tmux.conf
+    - unless: test -f /home/zenoss/.tmux.conf
+    - template: jinja
+    - user: zenoss
+    - group: zenoss
+    - mode: 644
+{% endif %}
+
 github-known_hosts:
   ssh_known_hosts.present:
     - name: github.com
