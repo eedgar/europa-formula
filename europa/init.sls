@@ -166,7 +166,7 @@ zenoss_public_key:
 
 serviced-repo:
     pkgrepo.managed:
-        - repo: 'deb [ arch=amd64 ] http://unstable.zenoss.io/apt/ubuntu trusty universe
+        - repo: 'deb [ arch=amd64 ] http://unstable.zenoss.io/apt/ubuntu trusty universe'
 
 serviced-repo-key:
   cmd.run:
