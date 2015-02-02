@@ -104,13 +104,14 @@ z_zenoss_user:
         - name: zenoss
         - present
         # password: zenoss as a hash
-        - password: $6$SvUPvd3Q$YQSi9Xh253iSIkRueSAvqEZmZDqMG8XjCzsYX.DrXR3UFdwGx8MQK358I4JNqnm6ttxiq6610fYVVrpnzqOmz0
+        - password: $6$Hi2RBlyd$VAwkGTGTvy38HOUrkZbaqP9/M7XULQ1zEJ4JkbvSy0xGYu6pRBZbZkp4EGlznJYJsw.R2Wep6su1Klw.3uPRB/
         - uid: 1337
         - gid: 1206
         - shell: /bin/bash
         - groups:
             - sudo
             - docker
+            - awsadmins
 
 dockerhub-login:
   cmd.run:
