@@ -1,3 +1,6 @@
+# https://github.com/control-center/serviced/wiki/Install-a-Build:-Ubuntu,-Master
+# https://github.com/zenoss/solutions-private/wiki
+
 {% set host = salt['grains.get']('host') %}
 {% set ip = salt['grains.get']('ip_interfaces:eth0')[0] %}
 {% set sourcedir = '/home/zenoss/src' %}
