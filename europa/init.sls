@@ -57,7 +57,6 @@ user-dependencies:
        - subversion
        - emacs
 
-
 tmuxinator:
   cmd.run:
     - name: "gem install tmuxinator"
@@ -165,25 +164,36 @@ zenoss_public_key:
        - group: z_zenoss_group
 {% endif %}
 
-serviced_deb:
-   cmd.run:
-       - name: curl {{ pillar['europa']['cc_url'] }} -o /tmp/serviced.deb
-       - unless:
-           - test -x /usr/bin/serviced
+serviced-repo:
+    pkgrepo.managed:
+        - repo: 'deb [ arch=amd64 ] http://unstable.zenoss.io/apt/ubuntu trusty universe
 
-serviced_install:
+serviced-repo-key:
   cmd.run:
-    - name: "dpkg -i /tmp/serviced.deb"
-    - unless:
-        - test -x /usr/bin/serviced
+    - name: "apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys AA5A1AD7"
+    - unless: 'apt-key list | grep A88D21E9'
     - require:
-      - cmd: serviced_deb
+        - pkgrepo: serviced-repo
 
-serviced_download_rm:
-  cmd.run:
-       - name: rm /tmp/serviced.deb
-       - onlyif:
-          - test -f /tmp/serviced.deb
+#serviced_deb:
+#   cmd.run:
+#       - name: curl {{ pillar['europa']['cc_url'] }} -o /tmp/serviced.deb
+#       - unless:
+#           - test -x /usr/bin/serviced
+#
+#serviced_install:
+#  cmd.run:
+#    - name: "dpkg -i /tmp/serviced.deb"
+#    - unless:
+#        - test -x /usr/bin/serviced
+#    - require:
+#      - cmd: serviced_deb
+#
+#serviced_download_rm:
+#  cmd.run:
+#       - name: rm /tmp/serviced.deb
+#       - onlyif:
+#          - test -f /tmp/serviced.deb
 
 srcdir-create:
    file.directory:
