@@ -67,6 +67,7 @@ europa:
        path: ZenPacks.zenoss.ZenWebTx
 
    extended_gitconfig: True
+   tmux_config: True
 
    # User info
    gitconfig: |
