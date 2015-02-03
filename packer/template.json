@@ -127,6 +127,10 @@
       "type": "shell"
     },
     {
+      "execute_command": "reboot",
+      "type": "shell"
+    },
+    {
       "environment_vars": [
         "CHEF_VERSION={{user `chef_version`}}"
       ],
