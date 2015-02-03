@@ -103,6 +103,13 @@ z_zenoss_group:
         - present
         - gid: 1206
 
+# install this group so that sudo works in the aws env out of the box
+z_awsadmins_group:
+    group:
+        - name: zenoss
+        - present
+        - gid: 1001
+
 z_zenoss_user:
     user:
         - name: zenoss
