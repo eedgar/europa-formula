@@ -55,7 +55,7 @@
         ]
       ],
       "virtualbox_version_file": ".vbox_version",
-      "vm_name": "packer-ubuntu-14.04-amd64"
+      "vm_name": "ubuntu-14.04-amd64"
     },
     {
       "boot_command": [
@@ -97,7 +97,7 @@
       "ssh_wait_timeout": "10000s",
       "tools_upload_flavor": "linux",
       "type": "vmware-iso",
-      "vm_name": "packer-ubuntu-14.04-amd64",
+      "vm_name": "ubuntu-14.04-amd64",
       "vmx_data": {
         "cpuid.coresPerSocket": "1",
         "memsize": "384",
@@ -107,7 +107,7 @@
   ],
   "post-processors": [
     {
-      "output": "../builds/{{.Provider}}/opscode_ubuntu-14.04_chef-{{user `chef_version`}}.box",
+      "output": "boxes/zenoss_ubuntu-14.04_amd64.{{.Provider}}.box",
       "type": "vagrant"
     }
   ],
@@ -122,7 +122,16 @@
         "scripts/sshd.sh",
         "scripts/networking.sh",
         "scripts/sudoers.sh",
-        "scripts/vagrant.sh",
+        "scripts/vagrant.sh"
+      ],
+      "type": "shell"
+    },
+    {
+      "environment_vars": [
+        "CHEF_VERSION={{user `chef_version`}}"
+      ],
+      "execute_command": "echo 'vagrant'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
         "scripts/vmtools.sh",
         "scripts/chef.sh",
         "scripts/puppet.sh",
@@ -130,7 +139,8 @@
         "scripts/cleanup.sh",
         "scripts/minimize.sh"
       ],
-      "type": "shell"
+      "type": "shell",
+      "pause_before": "10s"
     }
   ],
   "variables": {
