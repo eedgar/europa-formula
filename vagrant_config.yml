@@ -1,0 +1,24 @@
+europa:
+    properties:
+        memory: 8192
+        cpus: 4
+    shares:
+        vagrant:
+            host: "."
+            guest: "/vagrant"
+        salt:
+            host: "salt/roots/"
+            guest: "/srv/salt/"
+        pillar:
+            host: "salt/pillar/"
+            guest: "/srv/salt/pillar"
+        europa-formula:
+            host: "."
+            guest: "/srv/formulas/europa-formula/"
+    providers:
+        vmware_fusion: "http://enas.familyds.com/~eedgar/opscode_ubuntu-14.04_chef-provisionerless.box"
+    provisions:
+        # Run salt
+        - provision: salt
+          minion_config: "salt/minion"
+          run_highstate: true
