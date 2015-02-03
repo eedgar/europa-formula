@@ -16,6 +16,7 @@ europa:
             host: "."
             guest: "/srv/formulas/europa-formula/"
     providers:
+        virtualbox: "packer/ubuntu-14-04-x64-virtualbox.box"
         vmware_fusion: "packer/ubuntu-14-04-x64-vmware.box"
     provisions:
         # Run salt
