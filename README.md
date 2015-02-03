@@ -49,6 +49,7 @@ Vagrant plugins are used to enhance the vagrant environment
 Note: You must have purchased a license (license.lic) before running this
 
 ```vagrant plugin install vagrant-vmware-fusion```
+
 ```vagrant plugin license vagrant-vmware-fusion license.lic```
 
 #### [Sahara](https://github.com/jedi4ever/sahara): The Vagrant Sahara plugin is a snapshot manager
