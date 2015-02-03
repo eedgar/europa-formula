@@ -3,7 +3,9 @@
 
 require 'yaml'
 
-settings = YAML.load_file "vagrant_config.yml"
+config_filepath = File.expand_path("vagrant_config.yml",
+                                   File.dirname(__FILE__))
+settings = YAML.load_file config_filepath
 
 VAGRANTFILE_API_VERSION = "2"
 
@@ -36,8 +38,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
       end
       agent.vm.provider :vmware_fusion do |v, override|
-        v.box = name + ".vmware.box"
-        v.box_url = cfg["providers"]["vmware_fusion"]
+        override.vm.box = name + ".vmware.box"
+        override.vm.box_url = cfg["providers"]["vmware_fusion"]
         v.vmx["ethernet0.present"] = "TRUE"
         v.vmx["ethernet0.addressType"] = "static"
         v.vmx["ethernet0.linkStatePropagation.enable"] = "TRUE"
@@ -72,7 +74,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           v.customize ["modifyvm", :id, "--#{prop}", "#{val}"]
         end
       end
-      config.ssh.forward_agent = true
+      # TODO: make forwarding work properly.
+      # agent.ssh.forward_agent = true
       # if cfg.has_key?("ssh_keys")
       #   config.ssh.max_tries = 150
       #   cfg["ssh_keys"].each do |ssh_key, ssh_val|

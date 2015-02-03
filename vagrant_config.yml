@@ -16,7 +16,7 @@ europa:
             host: "."
             guest: "/srv/formulas/europa-formula/"
     providers:
-        vmware_fusion: "http://enas.familyds.com/~eedgar/opscode_ubuntu-14.04_chef-provisionerless.box"
+        vmware_fusion: "packer/ubuntu-14-04-x64-vmware.box"
     provisions:
         # Run salt
         - provision: salt

@@ -7,6 +7,20 @@ This guide will walk you through setting up as a developer for Europa.
 The installation is setup for a Mac OS X machine and may not work for
 other development environments.
 
+To start the process, simply run:
+
+```vagrant up```
+
+## Creating a base box
+A base box can be generated locally if desired using the packer script
+provided within the packer folder.
+
+```cd packer```
+
+```packer build template.json```
+
+```vagrant box add europa.vmware.box package.box```
+
 ## Pre-Installation Packages
 
 ### Automated:
