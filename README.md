@@ -15,7 +15,7 @@ provided within the packer folder.
 
 ```packer build template.json```
 
-```vagrant box add europa ubuntu-14-04-x64-vmware.box --provider=vmware_fusion```
+```vagrant box add europa ubuntu-14-04-x64-vmware.box --provider=vmware_desktop```
 
 ### Running Vagrant
 Now that a base box has been generated, it can be used to startup a Europa
