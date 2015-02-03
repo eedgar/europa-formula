@@ -17,8 +17,6 @@ Thes steps listed below are the manual steps to setup the programs
 
 #### [Homebrew](http://brew.sh): Homebrew is a package manager for Mac OS X.
 
-Install Homebrew:
-
 ```ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"```
 
 #### [Homebrew-Cask](https://github.com/caskroom/homebrew-cask): Homebrew cask wraps commonly installed programs (e.g. vmware, vagrant, etc.)
