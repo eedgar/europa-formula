@@ -19,7 +19,7 @@ provided within the packer folder.
 
 ```packer build template.json```
 
-```vagrant box add europa.vmware.box package.box```
+```vagrant box add europa ubuntu-14-04-x64-vmware.box --provider=vmware_fusion```
 
 ## Pre-Installation Packages
 
