@@ -21,6 +21,16 @@ provided within the packer folder.
 ### Configuring Vagrant
 Vagrant may be configured using the `vagrant_config.yml` file.
 
+```subl vagrant_config.yml```
+
+
+### Configuring Salt
+The salt recipe included within requires updating.
+
+```(cd salt/pillar && cp europa.sls.example europa-private.sls)```
+
+```subl salt/pillar/europa-private.sls```
+
 
 ### Running Vagrant
 Now that a base box has been generated, it can be used to startup a Europa
