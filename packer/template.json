@@ -127,7 +127,7 @@
       "type": "shell"
     },
     {
-      "execute_command": "echo 'vagrant'|{{.Vars}} sudo -S -E rebppt '{{.Path}}'",
+      "execute_command": "echo 'vagrant'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
       "inline": ["reboot"],
       "type": "shell"
     },
