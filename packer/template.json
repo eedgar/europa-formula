@@ -127,7 +127,7 @@
       "type": "shell"
     },
     {
-      "execute_command": "reboot",
+      "inline": ["reboot"],
       "type": "shell"
     },
     {
