@@ -1,18 +1,19 @@
-if [ ! -d Zenoss.develop ];
+template_url=http://artifacts.zenoss.loc/europa/releases/CR5/zenoss-core-5.0.0_CR5.json
+# http://artifacts.zenoss.loc/europa/releases/CR5/zenoss-resmgr-5.0.0_CR5.json
+
+wget -O /tmp/template.json ${template_url}
+sed -i 's/"Description": "Zenoss Core"/"Description": "Zenoss Develop"/' /tmp/template.json
+sed -i 's/"Name": "Zenoss.core"/"Name": "Zenoss.develop"/' /tmp/template.json
+
+awk 'BEGIN{num=split("zencommand|zenjmx|zenmodeler|zenperfsnmp|zenping|zenprocess|zenpython|zenstatus|zensyslog|zentrap",dmns,"|")} /"Name":/{print;name=$2;gsub(/[",]/,"",name);next;} /"Launch":/ { for (d in dmns) { if (dmns[d] == name){print "\"Launch\": \"manual\","; next; }}} {print}' /tmp/template.json  > /tmp/c
+cat /tmp/c|serviced template add
+
+if [ -f /tmp/c ];
 then
-    rm -Rf Zenoss.develop
+    rm /tmp/c
 fi
 
-cp -R zenoss-service/services/Zenoss.core Zenoss.develop
-sed -i 's/"Description": "Zenoss Core"/"Description": "Zenoss Develop"/' Zenoss.develop/service.json
-sed -i 's/"Launch": "auto"/"Launch": "manual"/' Zenoss.develop/localhost/localhost/zen{command,jmx,modeler,perfsnmp,ping,process,python,status,syslog,trap}/service.json
-
-# found the versions in the makefile of the zenoss-service repo.
-hbase_VERSION=$(cat zenoss-service/makefile |egrep 'hbase_VERSION\s+='|awk '{print $3}')
-opentsdb_VERSION=$(cat zenoss-service/makefile |egrep 'opentsdb_VERSION\s+='|awk '{print $3}')
-serviced template compile \
-    -map zenoss/hbase:xx,zenoss/hbase:${hbase_VERSION} \
-    -map zenoss/opentsdb:xx,zenoss/opentsdb:${opentsdb_VERSION} \
-    Zenoss.develop | serviced template add
-
-rm -Rf Zenoss.develop
+if [ -f /tmp/template.json ];
+then
+    rm /tmp/template.json
+fi
