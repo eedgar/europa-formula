@@ -79,14 +79,14 @@ europa:
       email: rocketman110@gmail.com
       password: password
 
-   ssh_keys:
-      privkey: |
-          -----BEGIN RSA PRIVATE KEY-----
-          MIIEpAIBAAKCAQEAri14UtcsvkAd+sACBZaZHcEDo2JFTCQoOr1ZenJFFTTF4fe1
-          zZA53u9GzLoFabfdW4heBRxd3VucfAeOVBkvNCGgEFyKEVj1Xx+eK+Bs//3tgXqJ
-          ....
-          ....
-          -----END RSA PRIVATE KEY-----
+   #ssh_keys:
+   #   privkey: |
+   #       -----BEGIN RSA PRIVATE KEY-----
+   #       MIIEpAIBAAKCAQEAri14UtcsvkAd+sACBZaZHcEDo2JFTCQoOr1ZenJFFTTF4fe1
+   #       zZA53u9GzLoFabfdW4heBRxd3VucfAeOVBkvNCGgEFyKEVj1Xx+eK+Bs//3tgXqJ
+   #       ....
+   #       ....
+   #       -----END RSA PRIVATE KEY-----
 
-      pubkey: |
-          ssh-rsa AAAAB3............pDg1DDur eedgar@zendev
+   #   pubkey: |
+   #       ssh-rsa AAAAB3............pDg1DDur eedgar@zendev
