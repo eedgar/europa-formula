@@ -1,10 +1,7 @@
-vagrant-additional-disk
-salt/pillar/europa-private.sls
-
 # Packer
-packer/packer_cache
-packer/*.box
+packer/packer_cache/
 builds/
+boxes/
 
 # Vagrant
 .vagrant
@@ -14,3 +11,8 @@ builds/
 .DS_Store
 .ruby-version
 coverage
+
+# Europa
+vagrant-additional-disk
+salt/pillar/europa-private.sls
+
