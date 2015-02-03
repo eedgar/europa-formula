@@ -1,3 +1,9 @@
 vagrant-additional-disk
 .vagrant
 salt/pillar/europa-private.sls
+
+# anywhere in the tree
+*~
+.DS_Store
+.ruby-version
+coverage
