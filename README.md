@@ -11,11 +11,11 @@ other development environments.
 A base box can be generated locally if desired using the packer script
 provided within the packer folder.
 
-```cd packer```
+```packer build packer/template.json```
 
-```packer build template.json```
+```vagrant box add --force europa builds/vmware/opscode_ubuntu-14.04_chef-provisionerless.box --provider=vmware_desktop```
 
-```vagrant box add europa ubuntu-14-04-x64-vmware.box --provider=vmware_desktop```
+```vagrant box add --force europa builds/virtualbox/opscode_ubuntu-14.04_chef-provisionerless.box --provider=virtualbox```
 
 ### Running Vagrant
 Now that a base box has been generated, it can be used to startup a Europa
@@ -23,7 +23,7 @@ instance.
 
 To start the process, simply run:
 
-```vagrant up```
+```vagrant destroy --force && vagrant up && vagrant ssh```
 
 
 ## Pre-Installation Packages
