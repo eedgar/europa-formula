@@ -58,12 +58,18 @@ user-dependencies:
        - python-pexpect
        - python-setuptools
        - subversion
-       - emacs
 
 tmuxinator:
   cmd.run:
     - name: "gem install tmuxinator"
     - unless: "test -x /usr/local/bin/tmuxinator"
+    - require:
+        - pkg: user-dependencies
+
+jq:
+  cmd.run:
+    - name: "curl http://stedolan.github.io/jq/download/linux64/jq -o /usr/bin/jq && chown root:root /usr/bin/jq && chmod a+x /usr/bin/jq"
+    - unless: "test -x /usr/bin/jq"
     - require:
         - pkg: user-dependencies
 
@@ -144,7 +150,7 @@ ssh_keydir:
         - user: z_zenoss_user
         - group: z_zenoss_group
 
-{% if 'ssh_keys:privkey' in europa %}
+{% if salt['pillar.get']('europa:ssh_keys:privkey') %}
 zenoss_private_key:
   file.managed:
      - name: /home/zenoss/.ssh/id_dsa
@@ -159,7 +165,7 @@ zenoss_private_key:
        - group: z_zenoss_group
 {% endif %}
 
-{% if 'ssh_keys:pubkey' in europa %}
+{% if salt['pillar.get']('europa:ssh_keys:pubkey') %}
 zenoss_public_key:
   file.managed:
      - name: /home/zenoss/.ssh/id_dsa.pub
