@@ -35,6 +35,7 @@ docker-dependencies:
 user-dependencies:
    pkg.installed:
      - names:
+       - autojump
        - git
        - ruby
        - git-flow
@@ -212,6 +213,11 @@ bashrc_edits:
   - marker_end: "# Zenoss5x: salt managed End DO NOT EDIT BY HAND"
   - backup: '.bak'
   - content: |
+     # if autojump is installed source it.
+     if [ -f /usr/share/autojump/autojump.sh ]; then
+         . /usr/share/autojump/autojump.sh
+     fi
+
      if [ -f ~/.bashrc.serviced ]; then
          . ~/.bashrc.serviced
      fi
