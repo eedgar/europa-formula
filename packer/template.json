@@ -122,7 +122,9 @@
         "scripts/sshd.sh",
         "scripts/networking.sh",
         "scripts/sudoers.sh",
-        "scripts/vagrant.sh"
+        "scripts/development.sh",
+        "scripts/vagrant.sh",
+        "scripts/users.sh"
       ],
       "type": "shell"
     },

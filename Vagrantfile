@@ -75,17 +75,27 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
       end
       if cfg.has_key?("ssh_keys")
-        cfg["ssh_keys"].each do |ssh_key, ssh_file|
-          ssh_path = File.expand_path(ssh_file, __FILE__)
-          shell_cmd = "ssh-add -L | grep " + ssh_path
-          ssh_path_added = system(shell_cmd)
-          if not ssh_path_added
-            add_cmd = "ssh-add " + ssh_path
-            ssh_path_added = system(add_cmd)
-          end
-          if ssh_path_added
-            agent.ssh.private_key_path = ssh_path
-            agent.ssh.forward_agent = true
+        cfg["ssh_keys"].each do |name, data|
+          if data.has_key?("private_key_path")
+            key_path = data["private_key_path"]
+            key_path = File.expand_path(key_path, __FILE__)
+            shell_cmd = "ssh-add -L | grep " + key_path + " > /dev/null"
+            ssh_path_added = system(shell_cmd)
+            if not ssh_path_added
+              add_cmd = "ssh-add " + key_path
+              puts("Running cmd on host: " + add_cmd)
+              ssh_path_added = system(add_cmd)
+            end
+            if ssh_path_added
+              agent.ssh.private_key_path = key_path
+              agent.ssh.forward_agent = true
+              if data.has_key?("username")
+                agent.ssh.username = data["username"]
+              end
+              if data.has_key?("password")
+                agent.ssh.password = data["password"]
+              end
+            end
           end
         end
       end

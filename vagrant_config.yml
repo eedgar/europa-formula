@@ -15,6 +15,11 @@ europa:
         europa-formula:
             host: "."
             guest: "/srv/formulas/europa-formula/"
+    ssh_keys:
+        github:
+            private_key_path: ~/.ssh/id_rsa
+            username: zenoss
+            password: zenoss
     providers:
         virtualbox: "packer/boxes/zenoss_ubuntu-14.04_amd64.virtualbox.box"
         vmware_fusion: "packer/boxes/zenoss_ubuntu-14.04_amd64.vmware.box"
