@@ -74,11 +74,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           v.customize ["modifyvm", :id, "--#{prop}", "#{val}"]
         end
       end
-      # TODO: make forwarding work properly.
       if cfg.has_key?("ssh_keys")
-        cfg["ssh_keys"].each do |ssh_key, ssh_val|
-          agent.ssh.private_key_path = File.expand_path(ssh_val, __FILE__)
-          agent.ssh.forward_agent = true
+        cfg["ssh_keys"].each do |ssh_key, ssh_file|
+          ssh_path = File.expand_path(ssh_file, __FILE__)
+          shell_cmd = "ssh-add -L | grep " + ssh_path
+          ssh_path_added = system(shell_cmd)
+          if not ssh_path_added
+            add_cmd = "ssh-add " + ssh_path
+            ssh_path_added = system(add_cmd)
+          end
+          if ssh_path_added
+            agent.ssh.private_key_path = ssh_path
+            agent.ssh.forward_agent = true
+          end
         end
       end
       if cfg.has_key?("provisions")
