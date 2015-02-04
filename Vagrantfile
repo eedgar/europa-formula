@@ -38,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
       end
       agent.vm.provider :vmware_fusion do |v, override|
-        override.vm.box = name + ".vmware.box"
+        # override.vm.box = name + ".vmware.box"
         override.vm.box_url = cfg["providers"]["vmware_fusion"]
         v.vmx["ethernet0.present"] = "TRUE"
         v.vmx["ethernet0.addressType"] = "static"
@@ -59,7 +59,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
       end
       agent.vm.provider :virtualbox do |v, override|
-        override.vm.box = name + ".virtualbox.box"
+        # override.vm.box = name + ".virtualbox.box"
         override.vm.box_url = cfg['providers']['virtualbox']
         override.vm.network :private_network, type: "dhcp"
         if cfg.has_key?("ip") and cfg["ip"] != "dhcp"
@@ -75,14 +75,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
       end
       # TODO: make forwarding work properly.
-      # agent.ssh.forward_agent = true
-      # if cfg.has_key?("ssh_keys")
-      #   config.ssh.max_tries = 150
-      #   cfg["ssh_keys"].each do |ssh_key, ssh_val|
-      #     agent.ssh.private_key_path = File.expand_path(ssh_val, __FILE__)
-      #     agent.ssh.forward_agent = true
-      #   end
-      # end
+      if cfg.has_key?("ssh_keys")
+        cfg["ssh_keys"].each do |ssh_key, ssh_val|
+          agent.ssh.private_key_path = File.expand_path(ssh_val, __FILE__)
+          agent.ssh.forward_agent = true
+        end
+      end
       if cfg.has_key?("provisions")
         cfg["provisions"].each do |prov|
           agent.vm.provision prov["provision"] do |p|
