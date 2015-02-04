@@ -38,7 +38,7 @@ instance.
 
 To start the process, simply run:
 
-```vagrant destroy --force && vagrant up && vagrant ssh```
+```vagrant destroy --force; vagrant up; vagrant ssh```
 
 
 ## Pre-Installation Packages
