@@ -124,7 +124,10 @@
         "scripts/sudoers.sh",
         "scripts/development.sh",
         "scripts/vagrant.sh",
-        "scripts/users.sh"
+        "scripts/users.sh",
+        "scripts/chef.sh",
+        "scripts/puppet.sh",
+        "scripts/salt.sh"
       ],
       "type": "shell"
     },
@@ -140,9 +143,6 @@
       "execute_command": "echo 'vagrant'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
         "scripts/vmtools.sh",
-        "scripts/chef.sh",
-        "scripts/puppet.sh",
-        "scripts/salt.sh",
         "scripts/cleanup.sh",
         "scripts/minimize.sh"
       ],
