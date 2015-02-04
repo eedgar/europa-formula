@@ -54,6 +54,12 @@ Vagrant.configure(2) do |config|
 #    "grep -q sdb1 /etc/fstab || echo '/dev/sdb1 /opt/serviced/var btrfs rw,noatime,nodatacow 0 0' >> /etc/fstab && " +
 #    "grep -q /opt/serviced/var /proc/mounts || mount /opt/serviced/var"
 
+#  if Vagrant.has_plugin?("vagrant-proxyconf")
+#    config.proxy.http     = "http://192.168.190.1:3128"
+#    config.proxy.https    = "http://192.168.190.1:3128"
+#    config.proxy.no_proxy = "localhost,127.0.0.1"
+#  end
+
   config.vm.provision :salt do |salt|
     salt.minion_config = "salt/minion"
     salt.run_highstate = true
