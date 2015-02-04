@@ -4,6 +4,7 @@ apt-get install -y nfs-common
 apt-get install -y net-tools
 apt-get install -y apt-transport-https
 
+apt-get install -y bash-completion
 apt-get install -y git
 apt-get install -y ruby
 apt-get install -y git-flow
