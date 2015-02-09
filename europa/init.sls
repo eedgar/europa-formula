@@ -42,6 +42,7 @@ user-dependencies:
        - tmux
        - screen
        - vim
+       - emacs-nox
        - mosh
        - vcsh
        - mr
