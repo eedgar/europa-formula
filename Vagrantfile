@@ -16,9 +16,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       agent.vm.synced_folder ".", "/vagrant", id: "vagrant-root"
       if cfg.has_key?("forwards")
         cfg["forwards"].each do |port|
-          host = port["host"]
-          guest = port["guest"]
-          agent.vm.network "forwarded_port", guest: guest, host: host
+          host = "vagrant"
+          guest = "vagrant"
+          if port.has_key?("guest")
+            guest = port["guest"]
+          end
+          if port.has_key?("host")
+            host = port["host"]
+          end
+          agent.vm.network "forwarded_port", guest: guest, host: host, id: name
         end
       end
       if cfg.has_key?("shares")
@@ -89,6 +95,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             if ssh_path_added
               agent.ssh.private_key_path = key_path
               agent.ssh.forward_agent = true
+              agent.ssh.username = "vagrant"
+              agent.ssh.password = "vagrant"
               if data.has_key?("username")
                 agent.ssh.username = data["username"]
               end
