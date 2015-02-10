@@ -73,7 +73,7 @@ jq:
     - name: "curl http://stedolan.github.io/jq/download/linux64/jq -o /usr/bin/jq && chown root:root /usr/bin/jq && chmod a+x /usr/bin/jq"
     - unless: "test -x /usr/bin/jq"
     - require:
-        - pkg: user-dependencies
+        - pkg: docker-dependencies  # curl
 
 ## End Helpful user utilities
 
