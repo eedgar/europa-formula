@@ -1,19 +1,35 @@
-template_url=http://artifacts.zenoss.loc/europa/releases/CR5/zenoss-core-5.0.0_CR5.json
-# http://artifacts.zenoss.loc/europa/releases/CR5/zenoss-resmgr-5.0.0_CR5.json
+# Core develop
+serviced template list |grep Zenoss_core.develop
+if [ $? -ne 0 ]
+then
+serviced template list $(serviced template list |grep Zenoss.core|awk '{print $1}') > /tmp/template.json
 
-wget -O /tmp/template.json ${template_url}
-sed -i 's/"Description": "Zenoss Core"/"Description": "Zenoss Develop"/' /tmp/template.json
-sed -i 's/"Name": "Zenoss.core"/"Name": "Zenoss.develop"/' /tmp/template.json
+sed -i 's/"Description": "Zenoss Core"/"Description": "Zenoss Core Develop"/' /tmp/template.json
+sed -i 's/"Name": "Zenoss.core"/"Name": "Zenoss_core.develop"/' /tmp/template.json
 
 awk 'BEGIN{num=split("zencommand|zenjmx|zenmodeler|zenperfsnmp|zenping|zenprocess|zenpython|zenstatus|zensyslog|zentrap",dmns,"|")} /"Name":/{print;name=$2;gsub(/[",]/,"",name);next;} /"Launch":/ { for (d in dmns) { if (dmns[d] == name){print "\"Launch\": \"manual\","; next; }}} {print}' /tmp/template.json  > /tmp/c
 cat /tmp/c|serviced template add
 
-if [ -f /tmp/c ];
+if [ -f /tmp/template.json ];
 then
-    rm /tmp/c
+    rm /tmp/template.json
 fi
+fi
+
+# Resmgr develop
+serviced template list |grep Zenoss_resmgr.develop
+if [ $? -ne 0 ]
+then
+serviced template list $(serviced template list |grep Zenoss.resmgr|awk '{print $1}') > /tmp/template.json
+
+sed -i 's/"Description": "Zenoss Resource Manager"/"Description": "Zenoss Resource Manager Develop"/' /tmp/template.json
+sed -i 's/"Name": "Zenoss.resmgr"/"Name": "Zenoss_resmgr.develop"/' /tmp/template.json
+
+awk 'BEGIN{num=split("zencommand|zenjmx|zenmodeler|zenperfsnmp|zenping|zenprocess|zenpython|zenstatus|zensyslog|zentrap",dmns,"|")} /"Name":/{print;name=$2;gsub(/[",]/,"",name);next;} /"Launch":/ { for (d in dmns) { if (dmns[d] == name){print "\"Launch\": \"manual\","; next; }}} {print}' /tmp/template.json  > /tmp/c
+cat /tmp/c|serviced template add
 
 if [ -f /tmp/template.json ];
 then
     rm /tmp/template.json
+fi
 fi

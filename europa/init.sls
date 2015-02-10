@@ -42,7 +42,7 @@ user-dependencies:
        - tmux
        - screen
        - vim
-       - emacs-nox
+       - emacs24-nox
        - mosh
        - vcsh
        - mr
@@ -199,6 +199,20 @@ serviced:
     - require:
         - cmd: serviced-repo-key
 
+zenoss-core-service:
+  pkg.installed:
+    - name: zenoss-core-service
+    - refresh: True   # pick up the new info from setting the repo
+    - require:
+        - cmd: serviced-repo-key
+
+zenoss-resmgr-service:
+  pkg.installed:
+    - name: zenoss-resmgr-service
+    - refresh: True   # pick up the new info from setting the repo
+    - require:
+        - cmd: serviced-repo-key
+
 srcdir-create:
    file.directory:
      - name: {{ sourcedir }}
@@ -303,33 +317,23 @@ github-known_hosts:
     - require:
       - file: git-config
 
-#git@github.com:zenoss/zenoss-service.git:
-#  git.latest:
-#   - target: /home/zenoss/zenoss-service
-#    - unless: test -d /home/zenoss/zenoss-service
-#    - user: zenoss
-#    - require:
-#      - file: git-config
-#      - ssh_known_hosts: github-known_hosts
-
 add_template:
   cmd.script:
     - source: salt://europa/add_template
     - user: zenoss
     - template: jinja
-    - unless: serviced template list|grep Zenoss.develop
+    - unless: serviced template list|grep -q 'Zenoss_resmgr.develop' && serviced template list|grep -q 'Zenoss_core.develop'
     - require:
-#      - git: git@github.com:zenoss/zenoss-service.git
       - cmd: add_host
 
-deploy_template:
-  cmd.script:
-    - source: salt://europa/deploy_template
-    - user: zenoss
-    - template: jinja
-    - unless: serviced service list|grep Zenoss.develop
-    - require:
-      - cmd: add_template
+#deploy_template:
+#  cmd.script:
+#    - source: salt://europa/deploy_template
+#    - user: zenoss
+#    - template: jinja
+#    - unless: serviced service list|grep Zenoss.develop
+#    - require:
+#      - cmd: add_template
 
 {% for repo in salt['pillar.get']('europa:gitrepos') %}
 {{repo.repo}}:
