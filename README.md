@@ -9,7 +9,9 @@ other development environments.
 
 ### Creating a base box
 A base box can be generated locally if desired using the packer script
-provided within the packer folder.
+provided within the packer folder.  The vagrant_config.yml file uses a
+locally generated base box.  This can be re-configured with any URI if
+desired.
 
 ```(cd packer && packer build packer/template.json)```
 
