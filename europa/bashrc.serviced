@@ -13,7 +13,6 @@ alias ssaz='serviced service attach zope'
 alias st='serviced template'
 alias stl='serviced template list'
 alias std='serviced template deploy'
-alias zendmd='serviced service attach zope su zenoss -l -c "zendmd"'
 alias zope='serviced service attach zope su zenoss -l'
 alias snapshot="s snapshot add $(sss Zenoss_core.develop 2>/dev/null|grep develop|awk '{print $2}')"
 alias rollback="s snapshot rollback"
@@ -25,5 +24,11 @@ alias rdeploy="st deploy $(stl|grep Zenoss_resmgr.develop|awk '{print $1}') defa
 function zenpack () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
    ssaz su zenoss -l -c "zenpack $quoted_args"
+   unset quoted_args
+}
+
+function zendmd () {
+   quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
+   ssaz su zenoss -l -c "zendmd $quoted_args"
    unset quoted_args
 }
