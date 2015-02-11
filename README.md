@@ -13,7 +13,7 @@ provided within the packer folder.  The vagrant_config.yml file uses a
 locally generated base box.  This can be re-configured with any URI if
 desired.
 
-```(cd packer && packer build packer/template.json)```
+```(cd packer && packer build template.json)```
 
 ```vagrant box add --force europa packer/boxes/zenoss_ubuntu-14.04_amd64.vmware.box --provider=vmware_desktop```
 
