@@ -4,6 +4,7 @@ apt-get install -y nfs-common
 apt-get install -y net-tools
 apt-get install -y apt-transport-https
 
+apt-get install -y autojump
 apt-get install -y bash-completion
 apt-get install -y git
 apt-get install -y ruby
@@ -11,6 +12,8 @@ apt-get install -y git-flow
 apt-get install -y tmux
 apt-get install -y screen
 apt-get install -y vim
+apt-get install -y emacs24-nox
+apt-get install -y htop
 apt-get install -y mosh
 apt-get install -y vcsh
 apt-get install -y mr

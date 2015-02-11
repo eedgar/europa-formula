@@ -14,6 +14,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define name do |agent|
       agent.vm.box = name
       agent.vm.synced_folder ".", "/vagrant", id: "vagrant-root"
+      agent.vm.network "forwarded_port", guest: 443, host: 443
+      agent.vm.hostname = "zd"
       if cfg.has_key?("forwards")
         cfg["forwards"].each do |port|
           host = "vagrant"

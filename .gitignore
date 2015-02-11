@@ -13,6 +13,6 @@ boxes/
 coverage
 
 # Europa
-vagrant-additional-disk
+docker_images
 salt/pillar/europa-private.sls
 

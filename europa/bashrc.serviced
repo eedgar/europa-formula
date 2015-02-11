@@ -1,34 +1,106 @@
 ## serviced aliases
 ## managed by salt do not edit by hand
+IMG_DIR='/vagrant/docker_images'
+
 alias s='serviced'
-alias ss='serviced service'
-alias ssa='serviced service attach'
-alias ssaz='serviced service attach zope'
-alias ssl='serviced service list'
-alias ssr='serviced service run'
-alias ssrz='serviced service run zope'
-alias sss='serviced service status'
-alias ssdr="serviced service restart $(ssl|grep develop|awk '{print $1}')"
-alias ssaz='serviced service attach zope'
-alias st='serviced template'
-alias stl='serviced template list'
-alias std='serviced template deploy'
-alias zope='serviced service attach zope su zenoss -l'
+alias ss='s service'
+alias ssa='ss attach'
+alias ssaz='ss attach zope'
+alias ssl='ss list'
+alias ssr='ss run'
+alias ssrz='ssr zope'
+alias sss='ss status'
+alias ssdr="ss restart $(ssl|grep develop|awk '{print $1}')"
+alias st='s template'
+alias stl='st list'
+alias std='st deploy'
+alias zstart="ss restart $(ssl|grep develop|awk '{print $1}')"
+alias zstart='ss start Zenoss_core.develop'
 alias snapshot="s snapshot add $(sss Zenoss_core.develop 2>/dev/null|grep develop|awk '{print $2}')"
 alias rollback="s snapshot rollback"
 alias lssnap="s snapshot list $(sss Zenoss_core.develop 2>/dev/null|grep develop|awk '{print $2}')"
 alias rmsnap="s snapshot rm"
-alias lszoperun="serviced service list --format '{{range $key, $val := .Runs}} {{$key}}: {{$val}}  {{end}}' zope"
+alias lszoperun="ss list --format '{{range $key, $val := .Runs}} {{$key}}: {{$val}}  {{end}}' zope"
 alias cdeploy="st deploy $(stl|grep Zenoss_core.develop|awk '{print $1}') default Dev"
 alias rdeploy="st deploy $(stl|grep Zenoss_resmgr.develop|awk '{print $1}') default Dev"
+alias hbasestop="ss stop $(ss list|grep HBase| awk '{print $2}')"
+alias hbasestart="ss start $(ss list|grep HBase| awk '{print $2}')"
+
+function zope () {
+   #alias zope='ssa zope su zenoss -l'
+   if [ "$#" -gt 0 ]; then
+       quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
+       ssa zope su zenoss -l -c "$quoted_args"
+   else
+       ssa zope su zenoss -l
+   fi
+
+}
+
 function zenpack () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
-   ssaz su zenoss -l -c "zenpack $quoted_args"
+   ss shell --mount '/home/zenoss/src,/home/zenoss/src' zope su zenoss -l -c "zenpack $quoted_args"
+   #ssaz su zenoss -l -c "zenpack $quoted_args"
    unset quoted_args
 }
 
 function zendmd () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
-   ssaz su zenoss -l -c "zendmd $quoted_args"
+   ss shell zope su zenoss -l -c "zendmd $quoted_args"
    unset quoted_args
+}
+
+function containsElement () {
+  local e
+  for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
+  return 1
+}
+
+function save_images () {
+if [ -d ${IMG_DIR} ]
+then
+    IMAGES=$(docker images|tail -n +2|awk '{print $1}'|grep -v localhost|grep zenoss)
+    for image in $IMAGES
+    do
+        oimage=$(echo $image | sed 's|/|-SLASH-|g')
+        if [ ! -f ${IMG_DIR}/${oimage}.tar ]
+        then
+            echo "Saving $image"
+            docker save $image > ${IMG_DIR}/${oimage}.tar
+        fi
+    done
+fi
+}
+
+function restore_images () {
+if [ -d ${IMG_DIR} ]
+then
+    pushd ${IMG_DIR} 2>&1 > /dev/null
+    IMAGES=$(docker images|tail -n +2|awk '{print $1}'|grep -v localhost|grep zenoss|sed 's|\n| |g')
+    declare -a EXISTING_IMAGES_ARRAY
+    EXISTING_IMAGES_ARRAY=($IMAGES)
+    files=$(ls zenoss*.tar)
+    for file in $files
+    do
+        img_name=$(echo $file|sed 's/\(.*\)\..*/\1/'|sed 's|-SLASH-|/|g')
+        if ! containsElement "$img_name" "${EXISTING_IMAGES_ARRAY[@]}"
+        then
+            echo "loading $file"
+            docker load -i $file
+        fi
+    done
+    popd 2>&1 > /dev/null
+fi
+}
+
+function cdeploy () {
+    restore_images
+    st deploy $(stl|grep Zenoss_core.develop|awk '{print $1}') default Dev
+    save_images
+}
+
+function rdeploy () {
+    restore_images
+    st deploy $(stl|grep Zenoss_resmgr.develop|awk '{print $1}') default Dev
+    save_images
 }

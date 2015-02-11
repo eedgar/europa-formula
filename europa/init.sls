@@ -43,6 +43,7 @@ user-dependencies:
        - screen
        - vim
        - emacs24-nox
+       - htop
        - mosh
        - vcsh
        - mr
@@ -123,7 +124,7 @@ z_zenoss_user:
         - name: zenoss
         - present
         # password: zenoss as a hash
-        - password: $6$Hi2RBlyd$VAwkGTGTvy38HOUrkZbaqP9/M7XULQ1zEJ4JkbvSy0xGYu6pRBZbZkp4EGlznJYJsw.R2Wep6su1Klw.3uPRB/
+        - password: $6$Q8FR0/m/$Hyda6SFQt6oMkhpIY2W0Gl5y.6Xx5n.8o1kExx5urVyULN6zaJ.FQLhehI328P.LyqwGgfirUWrIK4Wh6T42U.
         - uid: 1337
         - gid: 1206
         - shell: /bin/bash
@@ -140,6 +141,42 @@ dockerhub-login:
     - require:
       - user: z_zenoss_user
 
+bashrc_edits:
+  file.blockreplace:
+  - name: /home/zenoss/.bashrc
+  - marker_start: "# Zenoss5x: salt managed Begin DO NOT EDIT BY HAND"
+  - marker_end: "# Zenoss5x: salt managed End DO NOT EDIT BY HAND"
+  - content: |
+     # if autojump is installed source it.
+     if [ -f /usr/share/autojump/autojump.sh ]; then
+         . /usr/share/autojump/autojump.sh
+     fi
+
+     if [ -f ~/.bashrc.serviced ]; then
+         . ~/.bashrc.serviced
+     fi
+  - append_if_not_found: True
+  - show_changes: True
+
+bashrc_serviced:
+    file.managed:
+      - name: /home/zenoss/.bashrc.serviced
+      - source: salt://europa/bashrc.serviced
+      - show_changes: True
+      - user: zenoss
+      - group: zenoss
+      - require:
+         - file: bashrc_edits
+
+# this step is an optimization and should be a noop on aws instances.
+# unless they have a /vagrant/docker_images folder prepopulated.
+vagrant-docker-image-restore:
+  cmd.run:
+    - user: zenoss
+    - name: "source /home/zenoss/.bashrc.serviced && restore_images"
+    - unless: 'docker images|grep isvcs'
+    - require:
+        - file: bashrc_serviced
 
 ssh_keydir:
     file.directory:
@@ -220,31 +257,6 @@ srcdir-create:
      - group: zenoss
      - require:
          - user: z_zenoss_user
-
-bashrc_edits:
-  file.blockreplace:
-  - name: /home/zenoss/.bashrc
-  - marker_start: "# Zenoss5x: salt managed Begin DO NOT EDIT BY HAND"
-  - marker_end: "# Zenoss5x: salt managed End DO NOT EDIT BY HAND"
-  - content: |
-     # if autojump is installed source it.
-     if [ -f /usr/share/autojump/autojump.sh ]; then
-         . /usr/share/autojump/autojump.sh
-     fi
-
-     if [ -f ~/.bashrc.serviced ]; then
-         . ~/.bashrc.serviced
-     fi
-  - append_if_not_found: True
-  - show_changes: True
-
-bashrc_serviced:
-    file.managed:
-      - name: /home/zenoss/.bashrc.serviced
-      - source: salt://europa/bashrc.serviced
-      - show_changes: True
-      - user: zenoss
-      - group: zenoss
 
 /etc/default/serviced:
   file.blockreplace:
