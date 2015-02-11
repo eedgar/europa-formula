@@ -37,6 +37,11 @@ function zope () {
 
 }
 
+function zenhub () {
+   quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
+   ss attach zenhub su zenoss -l -c "ps -axu && ps -axu|grep '^zenoss'|grep zenhub.py|grep -v bash|grep python|awk '{print \$2}'|xargs kill -9 && zenhub run --workers 0 $quoted_args"
+}
+
 function zenpack () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
    ss shell --mount '/home/zenoss/src,/home/zenoss/src' zope su zenoss -l -c "zenpack $quoted_args"
