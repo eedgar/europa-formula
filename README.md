@@ -91,3 +91,7 @@ Note: You must have purchased a license (license.lic) before running this
 #### [Sahara](https://github.com/jedi4ever/sahara): The Vagrant Sahara plugin is a snapshot manager
 ```vagrant plugin install sahara```
 
+
+
+# update mac's /etc/hosts to have a line like this with the 4 zd entries
+#127.0.0.1   localhost zd hbase.zd zenoss5.zd opentsdb.zd
