@@ -1,3 +1,18 @@
-vagrant-additional-disk
+# Packer
+packer/packer_cache/
+builds/
+boxes/
+
+# Vagrant
 .vagrant
+
+# Mac OS X
+*~
+.DS_Store
+.ruby-version
+coverage
+
+# Europa
+vagrant-additional-disk
 salt/pillar/europa-private.sls
+

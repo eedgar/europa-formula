@@ -226,7 +226,6 @@ bashrc_edits:
   - name: /home/zenoss/.bashrc
   - marker_start: "# Zenoss5x: salt managed Begin DO NOT EDIT BY HAND"
   - marker_end: "# Zenoss5x: salt managed End DO NOT EDIT BY HAND"
-  - backup: '.bak'
   - content: |
      # if autojump is installed source it.
      if [ -f /usr/share/autojump/autojump.sh ]; then
@@ -244,7 +243,6 @@ bashrc_serviced:
       - name: /home/zenoss/.bashrc.serviced
       - source: salt://europa/bashrc.serviced
       - show_changes: True
-      - backup: '.bak'
       - user: zenoss
       - group: zenoss
 

@@ -1,0 +1,28 @@
+europa:
+    properties:
+        memory: 8192
+        cpus: 4
+    shares:
+        vagrant:
+            host: "."
+            guest: "/vagrant"
+        salt:
+            host: "salt/roots/"
+            guest: "/srv/salt/"
+        pillar:
+            host: "salt/pillar/"
+            guest: "/srv/salt/pillar"
+        europa-formula:
+            host: "."
+            guest: "/srv/formulas/europa-formula/"
+    ssh_keys:
+        github:
+            private_key_path: ~/.ssh/id_rsa
+    providers:
+        virtualbox: "packer/boxes/zenoss_ubuntu-14.04_amd64.virtualbox.box"
+        vmware_fusion: "packer/boxes/zenoss_ubuntu-14.04_amd64.vmware.box"
+    provisions:
+        # Run salt
+        - provision: salt
+          minion_config: "salt/minion"
+          run_highstate: true

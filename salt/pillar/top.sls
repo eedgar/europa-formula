@@ -1,4 +1,3 @@
 base:
    '*':
-       - europa
        - europa-private
