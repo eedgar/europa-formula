@@ -10,21 +10,26 @@ alias ssl='ss list'
 alias ssr='ss run'
 alias ssrz='ssr zope'
 alias sss='ss status'
-alias ssdr="ss restart $(ssl|grep develop|awk '{print $1}')"
 alias st='s template'
 alias stl='st list'
 alias std='st deploy'
-alias zstart="ss restart $(ssl|grep develop|awk '{print $1}')"
-alias zstart='ss start Zenoss_core.develop'
-alias snapshot="s snapshot add $(sss Zenoss_core.develop 2>/dev/null|grep develop|awk '{print $2}')"
+alias snapshot="s snapshot add $(sss 2>/dev/null|grep Zenoss|grep develop|awk '{print $2}')"
+alias lssnap="s snapshot list $(sss 2>/dev/null|grep Zenoss|grep develop|awk '{print $2}')"
 alias rollback="s snapshot rollback"
-alias lssnap="s snapshot list $(sss Zenoss_core.develop 2>/dev/null|grep develop|awk '{print $2}')"
 alias rmsnap="s snapshot rm"
 alias lszoperun="ss list --format '{{range $key, $val := .Runs}} {{$key}}: {{$val}}  {{end}}' zope"
-alias cdeploy="st deploy $(stl|grep Zenoss_core.develop|awk '{print $1}') default Dev"
-alias rdeploy="st deploy $(stl|grep Zenoss_resmgr.develop|awk '{print $1}') default Dev"
 alias hbasestop="ss stop $(ss list|grep HBase| awk '{print $2}')"
 alias hbasestart="ss start $(ss list|grep HBase| awk '{print $2}')"
+# Zenoss
+alias zenossID="sss|grep develop|grep Zenoss|awk '{print $2}'"
+alias startZenoss="ss start $(zenossID)"
+alias stopZenoss="ss stop $(zenossID)"
+alias restartZenoss="ss restart $(zenossID)"
+alias zenhubDebug="sa zenhub su - zenoss -c 'zenhub debug'"
+
+# Tmux
+alias tks="tmux kill-session"
+alias mz="mux zenoss"
 
 function zope () {
    #alias zope='ssa zope su zenoss -l'
@@ -51,13 +56,26 @@ function zenpack () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
    ss shell --mount '/home/zenoss/src,/home/zenoss/src' zope su zenoss -l -c "zenpack $quoted_args"
    #ssaz su zenoss -l -c "zenpack $quoted_args"
-   unset quoted_args
 }
 
 function zendmd () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
    ss shell zope su zenoss -l -c "zendmd $quoted_args"
-   unset quoted_args
+}
+
+function zenpython () {
+   quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
+   ss shell zope su zenoss -l -c "zenpython $quoted_args"
+}
+
+function zencommand () {
+   quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
+   ss shell zope su zenoss -l -c "zencommand $quoted_args"
+}
+
+function zenperfsnmp () {
+   quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
+   ss shell zope su zenoss -l -c "zenperfsnmp $quoted_args"
 }
 
 function containsElement () {
@@ -105,12 +123,28 @@ fi
 
 function cdeploy () {
     restore_images
-    st deploy $(stl|grep Zenoss_core.develop|awk '{print $1}') default Dev
+    st deploy $(stl|grep Zenoss.core.develop|awk '{print $1}') default Dev
     save_images
 }
 
 function rdeploy () {
     restore_images
-    st deploy $(stl|grep Zenoss_resmgr.develop|awk '{print $1}') default Dev
+    st deploy $(stl|grep Zenoss.resmgr.develop|awk '{print $1}') default Dev
     save_images
 }
+
+function zenoss () {
+   if [[ "$1" == "start" ]]; then
+       startZenoss
+   fi
+   if [[ "$1" == "stop" ]]; then
+       stopZenoss
+   fi
+   if [[ "$1" == "restart" ]]; then
+       restartZenoss
+   fi
+   if [[ "$1" == "status" ]]; then
+       sss
+   fi
+}
+

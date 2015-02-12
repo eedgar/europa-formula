@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+
+"""devinate-template (a.k.a. developinate-template)
+
+This script can be used to take an existing Zenoss serviced service
+definition and modify it to be more appropriate for a slimmed-down
+ZenPack development environment. A compiled Zenoss serviced service
+definition is expected on STDIN, and the modified service definition
+will be written to STDOUT.
+
+Currently the following changes are made to the input template.
+
+    * Append ".develop" to app and top level service names.
+    * Append " (develop)" toapp and top level service descriptions.
+    * Change launch mode from auto to manual for all collector services.
+
+Example usage:
+
+    serviced template list \
+        $(serviced template list|grep Zenoss.core|awk '{print $1}') \
+        | devinate-template \
+        | serviced template add
+
+"""
+
+__version__ = "1.0"
+
+import json
+import sys
+
+collector_services = [
+    'zencommand',
+    'zenmodeler',
+    'zenperfsnmp',
+    'zenping',
+    'zenprocess',
+    'zenpython',
+    'zenstatus',
+    'zensyslog',
+    'zentrap',
+    'zenjmx',
+    ]
+
+
+def matching_services(service, names):
+    """Recursively generate services in service where "Name" is in names."""
+    name = service.get('Name')
+    if name in names:
+        yield service
+
+    for subservice in service.get('Services') or []:
+        for matching_subservice in matching_services(subservice, names):
+            yield matching_subservice
+
+
+def main():
+    app = json.load(sys.stdin)
+    top_service = app['Services'][0]
+
+    new_name = '{}.develop'.format(app['Name'])
+    new_description = '{} (develop)'.format(top_service['Description'])
+
+    app['Name'] = new_name
+    app['Description'] = new_description
+
+    top_service['Name'] = new_name
+    top_service['Description'] = new_description
+
+    for service in matching_services(app, collector_services):
+        if 'Launch' in service:
+            service['Launch'] = 'manual'
+
+    print json.dumps(app)
+
+
+if __name__ == '__main__':
+    main()

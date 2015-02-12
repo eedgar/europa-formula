@@ -61,6 +61,7 @@ user-dependencies:
        - python-pexpect
        - python-setuptools
        - subversion
+       - openjdk-7-jre
 
 tmuxinator:
   cmd.run:
@@ -69,12 +70,43 @@ tmuxinator:
     - require:
         - pkg: user-dependencies
 
+tmuxinator_dir:
+    file.directory:
+      - name: /home/zenoss/.tmuxinator/
+      - user: zenoss
+      - group: zenoss
+      - makedirs: True
+      - mode: 700
+      - require:
+        - user: z_zenoss_user
+        - cmd: tmuxinator
+
+tmuxinator_zenoss:
+    file.managed:
+      - name: /home/zenoss/.tmuxinator/zenoss.yml
+      - source: salt://europa/tmuxinator_zenoss.yml
+      - unless: "test -f /home/zenoss/.tmuxinator/zenoss.yml"
+      - show_changes: True
+      - user: zenoss
+      - group: zenoss
+      - require:
+        - user: z_zenoss_user
+        - cmd: tmuxinator
+
 jq:
   cmd.run:
     - name: "curl http://stedolan.github.io/jq/download/linux64/jq -o /usr/bin/jq && chown root:root /usr/bin/jq && chmod a+x /usr/bin/jq"
     - unless: "test -x /usr/bin/jq"
     - require:
         - pkg: docker-dependencies  # curl
+
+es:
+  cmd.run:
+    - name: "curl http://download.elasticsearch.org/es2unix/es -o /usr/bin/es && chown root:root /usr/bin/es && chmod a+x /usr/bin/es"
+    - unless: "test -x /usr/bin/es"
+    - require:
+        - pkg: docker-dependencies  # curl
+        - pkg: user-dependencies  # openjdk-7-jre
 
 ## End Helpful user utilities
 
@@ -147,6 +179,8 @@ bashrc_edits:
   - marker_start: "# Zenoss5x: salt managed Begin DO NOT EDIT BY HAND"
   - marker_end: "# Zenoss5x: salt managed End DO NOT EDIT BY HAND"
   - content: |
+     export PATH=~/bin:$PATH
+
      # if autojump is installed source it.
      if [ -f /usr/share/autojump/autojump.sh ]; then
          . /usr/share/autojump/autojump.sh
@@ -155,6 +189,7 @@ bashrc_edits:
      if [ -f ~/.bashrc.serviced ]; then
          . ~/.bashrc.serviced
      fi
+
   - append_if_not_found: True
   - show_changes: True
 
@@ -167,6 +202,27 @@ bashrc_serviced:
       - group: zenoss
       - require:
          - file: bashrc_edits
+
+bin_dir:
+    file.directory:
+      - name: /home/zenoss/bin
+      - user: zenoss
+      - group: zenoss
+      - makedirs: True
+      - mode: 700
+      - require:
+        - user: z_zenoss_user
+
+devinate-template:
+    file.managed:
+      - name: /home/zenoss/bin/devinate-template
+      - source: salt://europa/devinate-template
+      - show_changes: True
+      - user: zenoss
+      - group: zenoss
+      - mode: 755
+      - require:
+         - file: bin_dir
 
 # this step is an optimization and should be a noop on aws instances.
 # unless they have a /vagrant/docker_images folder prepopulated.
