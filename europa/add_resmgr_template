@@ -1,11 +1,10 @@
-# Core develop
-serviced template list |grep Zenoss.core.develop
+# Resmgr
+serviced template list |grep Zenoss.resmgr
 if [ $? -ne 0 ]
 then
-
-TEMPLATE_ID=$(serviced template list|grep Zenoss.core|awk '{print $1}')
-serviced template list $TEMPLATE_ID | devinate-template | serviced template add
-
+    pushd /opt/serviced/templates
+    serviced template add zenoss-resmgr*.json
+    popd
 fi
 
 # Resmgr develop

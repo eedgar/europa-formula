@@ -4,7 +4,6 @@
 {% set host = salt['grains.get']('host') %}
 {% set ip = salt['grains.get']('ip_interfaces:eth0')[0] %}
 {% set sourcedir = '/home/zenoss/src' %}
-{% set docker_image = 'zenoss/serviced-isvcs\:v26' %}
 {% set europa = salt['pillar.get']('europa', {}) %}
 
 {{ host }}:
@@ -165,13 +164,6 @@ z_zenoss_user:
             - docker
             - awsadmins
 
-dockerhub-login:
-  cmd.run:
-    - name: docker login -u {{ pillar['europa']['dockerhub']['username'] }} -e {{ pillar['europa']['dockerhub']['email'] }} -p {{ pillar['europa']['dockerhub']['password'] }}
-    - user: zenoss
-    - unless: test -f ~/.dockercfg
-    - require:
-      - user: z_zenoss_user
 
 bashrc_edits:
   file.blockreplace:
@@ -292,20 +284,6 @@ serviced:
     - require:
         - cmd: serviced-repo-key
 
-zenoss-core-service:
-  pkg.installed:
-    - name: zenoss-core-service
-    - refresh: True   # pick up the new info from setting the repo
-    - require:
-        - cmd: serviced-repo-key
-
-zenoss-resmgr-service:
-  pkg.installed:
-    - name: zenoss-resmgr-service
-    - refresh: True   # pick up the new info from setting the repo
-    - require:
-        - cmd: serviced-repo-key
-
 srcdir-create:
    file.directory:
      - name: {{ sourcedir }}
@@ -383,24 +361,6 @@ github-known_hosts:
     - require:
       - file: git-config
 
-add_template:
-  cmd.script:
-    - source: salt://europa/add_template
-    - user: zenoss
-    - template: jinja
-    - unless: serviced template list|grep -q 'Zenoss_resmgr.develop' && serviced template list|grep -q 'Zenoss_core.develop'
-    - require:
-      - cmd: add_host
-
-#deploy_template:
-#  cmd.script:
-#    - source: salt://europa/deploy_template
-#    - user: zenoss
-#    - template: jinja
-#    - unless: serviced service list|grep Zenoss.develop
-#    - require:
-#      - cmd: add_template
-
 {% for repo in salt['pillar.get']('europa:gitrepos') %}
 {{repo.repo}}:
   git.latest:
@@ -410,3 +370,48 @@ add_template:
     - require:
       - file: git-config
 {% endfor %}
+
+zenoss-core-service:
+  pkg.installed:
+    - name: zenoss-core-service
+    - refresh: True   # pick up the new info from setting the repo
+    - require:
+        - service: serviced-service
+        - cmd: serviced-repo-key
+
+add_core_template:
+  cmd.script:
+    - source: salt://europa/add_core_template
+    - user: zenoss
+    - template: jinja
+    - unless: serviced template list|grep -q 'Zenoss.core.develop'
+    - require:
+      - cmd: add_host
+
+{% if salt['pillar.get']('europa:resmgr', False) %}
+dockerhub-login:
+  cmd.run:
+    - name: docker login -u {{ pillar['europa']['dockerhub']['username'] }} -e {{ pillar['europa']['dockerhub']['email'] }} -p {{ pillar['europa']['dockerhub']['password'] }}
+    - user: zenoss
+    - unless: test -f ~/.dockercfg
+    - require:
+      - user: z_zenoss_user
+
+zenoss-resmgr-service:
+  pkg.installed:
+    - name: zenoss-resmgr-service
+    - refresh: True   # pick up the new info from setting the repo
+    - require:
+        - service: serviced-service
+        - cmd: serviced-repo-key
+
+add_resmgr_template:
+  cmd.script:
+    - source: salt://europa/add_resmgr_template
+    - user: zenoss
+    - template: jinja
+    - unless: serviced template list|grep -q 'Zenoss.resmgr.develop'
+    - require:
+      - cmd: add_host
+{% endif %}
+

@@ -20,6 +20,7 @@ alias rmsnap="s snapshot rm"
 alias lszoperun="ss list --format '{{range $key, $val := .Runs}} {{$key}}: {{$val}}  {{end}}' zope"
 alias hbasestop="serviced service stop hbase"
 alias hbasestart="serviced service start hbase"
+
 # Zenoss
 alias zenossID="sss|grep develop|grep Zenoss|awk '{print $2}'"
 alias startZenoss="ss start $(zenossID)"
@@ -55,27 +56,36 @@ function zopectl () {
 function zenpack () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
    ss shell --mount '/home/zenoss/src,/home/zenoss/src' zope su zenoss -l -c "zenpack $quoted_args"
-   #ssaz su zenoss -l -c "zenpack $quoted_args"
 }
+
+function zpli () {
+   zenpack --link --install src/$1
+}
+
+function zprm () {
+   zenpack --remove src/$1
+}
+
+alias zpst="zenpack --list"
 
 function zendmd () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
-   ss shell zope su zenoss -l -c "zendmd $quoted_args"
+   ssaz su zenoss -l -c "zendmd $quoted_args"
 }
 
 function zenpython () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
-   ss shell zope su zenoss -l -c "zenpython $quoted_args"
+   ss shell --mount '/home/zenoss/src,/home/zenoss/src' zope su zenoss -l -c "zenpython $quoted_args"
 }
 
 function zencommand () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
-   ss shell zope su zenoss -l -c "zencommand $quoted_args"
+   ss shell --mount '/home/zenoss/src,/home/zenoss/src' zope su zenoss -l -c "zencommand $quoted_args"
 }
 
 function zenperfsnmp () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
-   ss shell zope su zenoss -l -c "zenperfsnmp $quoted_args"
+   ss shell --mount '/home/zenoss/src,/home/zenoss/src' zope su zenoss -l -c "zenperfsnmp $quoted_args"
 }
 
 function containsElement () {

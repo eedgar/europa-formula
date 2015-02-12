@@ -1,0 +1,18 @@
+# Core
+serviced template list |grep Zenoss.core
+if [ $? -ne 0 ]
+then
+    pushd /opt/serviced/templates
+    serviced template add zenoss-core*.json
+    popd
+fi
+
+# Core develop
+serviced template list |grep Zenoss.core.develop
+if [ $? -ne 0 ]
+then
+
+TEMPLATE_ID=$(serviced template list|grep Zenoss.core|awk '{print $1}')
+serviced template list $TEMPLATE_ID | devinate-template | serviced template add
+
+fi
