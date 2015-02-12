@@ -18,8 +18,8 @@ alias lssnap="s snapshot list $(sss 2>/dev/null|grep Zenoss|grep develop|awk '{p
 alias rollback="s snapshot rollback"
 alias rmsnap="s snapshot rm"
 alias lszoperun="ss list --format '{{range $key, $val := .Runs}} {{$key}}: {{$val}}  {{end}}' zope"
-alias hbasestop="ss stop $(ss list|grep HBase| awk '{print $2}')"
-alias hbasestart="ss start $(ss list|grep HBase| awk '{print $2}')"
+alias hbasestop="serviced service stop hbase"
+alias hbasestart="serviced service start hbase"
 # Zenoss
 alias zenossID="sss|grep develop|grep Zenoss|awk '{print $2}'"
 alias startZenoss="ss start $(zenossID)"
