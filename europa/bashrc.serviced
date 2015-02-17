@@ -50,7 +50,7 @@ function zenhub () {
 
 function zopectl () {
    quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
-   ss attach zope su root -l -c "ps -axu|grep  -v serviced|grep zope|grep -v grep|awk '{print \$2}'|xargs kill -9 && su - zenoss -c \"zopectl $quoted_args\""
+   ss attach zope su root -l -c "kill $(pgrep python2.7) && su - zenoss -c \"zopectl $quoted_args\""
 }
 
 function zenpack () {
