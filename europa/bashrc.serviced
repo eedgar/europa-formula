@@ -58,6 +58,11 @@ function zenpack () {
    ss shell --mount '/home/zenoss/src,/home/zenoss/src' zope su zenoss -l -c "zenpack $quoted_args"
 }
 
+function shell () {
+   quoted_args="$(printf " %q" "$@")" # Note: this will have a leading space before the first arg
+   ss shell --mount '/home/zenoss/src,/home/zenoss/src' zope
+}
+
 function zpli () {
    zenpack --link --install src/$1
 }
