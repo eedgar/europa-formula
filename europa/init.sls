@@ -269,7 +269,7 @@ zenoss_public_key:
 
 serviced-repo:
     pkgrepo.managed:
-        - repo: 'deb [ arch=amd64 ] http://unstable.zenoss.io/apt/ubuntu trusty universe'
+        - repo: 'deb [ arch=amd64 ] http://get.zenoss.io/apt/ubuntu trusty universe'
 
 serviced-repo-key:
   cmd.run:
@@ -278,11 +278,17 @@ serviced-repo-key:
     - require:
         - pkgrepo: serviced-repo
 
+ntp:
+   pkg.installed:
+     - names:
+       - ntp
+
 serviced:
   pkg.installed:
     - refresh: True   # pick up the new info from setting the repo
     - require:
         - cmd: serviced-repo-key
+        - pkg: ntp
 
 srcdir-create:
    file.directory:
