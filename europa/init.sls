@@ -123,7 +123,7 @@ docker-repo-key:
     - require:
         - pkgrepo: docker-repo
 
-lxc-docker-1.3.3:
+lxc-docker:
   pkg.installed:
     - refresh: True   # pick up the new info from setting the repo
     - require:
