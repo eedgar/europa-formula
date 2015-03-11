@@ -129,12 +129,12 @@ lxc-docker-1.3.3:
     - require:
         - cmd: docker-repo-key
 
-docker_aufs:
-  cmd.run:
-    - name: "stop docker && apt-get remove -y lxc-docker && apt-get -y autoremove && rm -rf /var/lib/docker/* && apt-get update -y && apt-get install -y linux-image-extra-`uname -r` && apt-get install -y lxc-docker-1.3.3 && start docker"
-    - unless: "docker info|grep 'Storage Driver: aufs'"
-    - require:
-      - pkg: lxc-docker-1.3.3
+#docker_aufs:
+#  cmd.run:
+#    - name: "stop docker && apt-get remove -y lxc-docker && apt-get -y autoremove && rm -rf /var/lib/docker/* && apt-get update -y && apt-get install -y linux-image-extra-`uname -r` && apt-get install -y lxc-docker-1.3.3 && start docker"
+#    - unless: "docker info|grep 'Storage Driver: aufs'"
+#    - require:
+#      - pkg: lxc-docker-1.3.3
 
 # zenoss user/group
 z_zenoss_group:
