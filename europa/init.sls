@@ -123,11 +123,11 @@ docker-repo-key:
     - require:
         - pkgrepo: docker-repo
 
-lxc-docker:
-  pkg.installed:
-    - refresh: True   # pick up the new info from setting the repo
-    - require:
-        - cmd: docker-repo-key
+#lxc-docker:
+#  pkg.installed:
+#    - refresh: True   # pick up the new info from setting the repo
+#    - require:
+#        - cmd: docker-repo-key
 
 #docker_aufs:
 #  cmd.run:
