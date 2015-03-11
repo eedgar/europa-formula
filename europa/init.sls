@@ -308,6 +308,11 @@ srcdir-create:
      - content: |
         SERVICED_LOG_LEVEL=2
         SERVICED_OPTS="-mount *,{{ sourcedir }},{{ sourcedir }}"
+        SERVICED_FS_TYPE="btrfs"
+        HOME="/root"
+        SERVICED_REGISTRY=1
+        SERVICED_AGENT=1
+        SERVICED_MASTER=1
 
 serviced-service:
     service.running:
